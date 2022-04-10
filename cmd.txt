@@ -1,0 +1,798 @@
+NodeJs:
+FinApi:
+https://app.rocketseat.com.br/node/primeiro-projeto-com-node-js/lesson/remover-conta
+
+
+github dos colegas:
+https://github.com/NehamaMandelbaum/FinAPI
+https://github.com/colacobruno/node-desafio1
+
+
+
+mkdir fundamentos_nodejs
+cd fundamentos_nodejs
+yarn init -y
+
+yarn add express
+
+node src/index.js
+
+
+yarn add nodemon -D
+yarn dev
+
+
+yarn add uuid
+
+
+https://insomnia.rest/download
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Função splice deletando conta errada ao criar novamente a conta
+Aula em: Primeiro projeto com Node.js › Primeiro projeto com Node.js › Remover conta
+
+Percebi que ao tentar criar a conta novamente com o mesmo CPF e depois deletar, a função splice estava removendo a posição errada ao utilizar dessa forma:
+
+costumers.splice(costumer, 1);
+
+Resolvi a situação buscando o index do costumer com findIndex, dessa forma:
+
+const indexCostumer = costumers.findIndex(
+costumerIndex => costumerIndex.cpf === costumer.cpf);
+
+costumers.splice(indexCostumer, 1);
+
+Agora a função splice funciona corretamente
+Luiz Fernando Martins Leite
+04/05/21 às 18:21
+
+Nem tinha reparado nisso, Obrigado por postar Camila, funcionou certinho sua dica
+Arthur G. Machado Raimundo
+09/05/21 às 17:46
+
+Nao reparei tbm, eu pensei em fazer pelo filter, mas seu jeito ficou mais explicito.
+Eduardo Bess
+02/09/21 às 06:13
+
+Bem observado Camila! Apenas observo que, para rodar corretamente no código da aula da Dani, precisamos escrever "customer" e não "costumer", para que a variável seja encontrada.
+Bernardo Rosa Pinheiro
+06/10/21 às 15:53
+
+Muito bom, ficou perfeito.
+Elson Costa
+03/02/22 às 15:51
+
+Havia reparado durante a aula que não estava funcionando corretamente, mas não havia conseguido responder sem a sua ajuda. Ob rigado.
+Melhor Resposta
+Bruno De Araujo Gomes
+19/04/21 às 22:35 | Editado em 16/03/2022
+
+Olá @Camila Queiroz,
+
+Você esta correta na video aula apresenta por se tratar do primeiro registro, é passada aquela sensação que funcionou perfeitamente, porém o splice sempre apaga a primeira posição do array.
+
+Olha como ficou o código
+
+app.delete("/repositories/:id", (request, response) => {
+  const { id } = request.params;
+
+  const repositoryIndex = repositories.findIndex(repository => repository.id === id);
+
+  if (repositoryIndex === -1) {
+    return response.status(404).json({ error: 'Repository Not Found' });
+  }
+
+  repositories.splice(repositoryIndex, 1);
+
+  return response.status(204).json();
+
+});
+
+Camila Queiroz
+25/04/21 às 23:40
+
+Sim @Bruno De Araujo Gomes, fiz exatamente dessa forma.. funcionou tudo ok
+Daizovitch
+16/03/22 às 05:33
+
+@Camila Queiroz
+Também notei isso, resolvi utilizando indexOf
+Todas as respostas
+
+Página 1 de página 1
+Priscila Martins
+24/04/21 às 12:53 | Editado em 20/03/2022
+
+Oi Camila. Eu percebi a mesma coisa.
+Mas ao invés de fazer uma nova consulta para retornar o índice eu usei a função indexOf, ficando assim:
+
+const { customer } = request;
+
+customers.splice(customers.indexOf(customer),1);
+
+Como eu não conheço tanto o Javascript não sei se pode haver algum problema em relação à performance em caso de arrays muito grandes, mas foi uma solução que achei mais simples.
+Camila Queiroz
+25/04/21 às 23:45
+
+@Priscila Martins Muito bom, como já temos o objeto, o indexOf é um recurso legal de usar nesse caso mesmo.. bem lembrado
+Nuno Miranda
+09/05/21 às 00:10
+
+eu deixei assim: customers.splice(customers.indexOf(customer,1),1);
+não sei se fica ambiguo, mas funcionou
+LUIS MATHEUS BARBOSA DA SILVA SANTOS
+26/06/21 às 19:11
+
+@Priscila Martins funcionou perfeitamente, mas porque ? kkk Eu tentei reproduzir fora do node e não funcionou , sempre retorna -1 , porque aqui ele funciona ?
+Ricardo Kanashiro
+04/12/21 às 14:19
+
+Muito obrigado, foi um dos métodos mais simples que achei msm!
+Noan Almeida
+15/01/22 às 20:57
+
+Muito obrigado, foi a maneira mais enxuta e a que funcionou perfeitamente!
+Bruno De Araujo Gomes
+19/04/21 às 22:35 | Editado em 16/03/2022
+
+Olá @Camila Queiroz,
+
+Você esta correta na video aula apresenta por se tratar do primeiro registro, é passada aquela sensação que funcionou perfeitamente, porém o splice sempre apaga a primeira posição do array.
+
+Olha como ficou o código
+
+app.delete("/repositories/:id", (request, response) => {
+  const { id } = request.params;
+
+  const repositoryIndex = repositories.findIndex(repository => repository.id === id);
+
+  if (repositoryIndex === -1) {
+    return response.status(404).json({ error: 'Repository Not Found' });
+  }
+
+  repositories.splice(repositoryIndex, 1);
+
+  return response.status(204).json();
+
+});
+
+Camila Queiroz
+25/04/21 às 23:40
+
+Sim @Bruno De Araujo Gomes, fiz exatamente dessa forma.. funcionou tudo ok
+Daizovitch
+16/03/22 às 05:33
+
+@Camila Queiroz
+Também notei isso, resolvi utilizando indexOf
+Roberto
+25/04/21 às 16:24 | Editado em 12/09/2021
+
+O vídeo está com os passo com falha, seguindo a idéia do @Bruno De Araujo Gomes, bateu na boa os testes.
+Também fiz o seguinte:
+
+const balance = getBalance(customer.statement);
+if (balance !== 0) {
+return response.status(400).json({ erro: "To delete an account, it isn't have found"});
+}
+
+Pois para apagar uma conta em um banco, ela nao deve ter saldo.
+Paulo Cesar Morais De Oliveira
+27/10/21 às 14:43 | Editado em 14/03/2022
+
+A pergunta é, pq o pessoal da RocketSeat nao arrumou ou fez uma observação visto que várias pessoas viram o erro comentaram aqui, e os que estão chegando agora nesse ponto ficam passando trabalho de graça achando que fizeram algo errado!
+Igor Piedade
+21/10/21 às 11:53 | Editado em 01/12/2021
+
+Também percebi o erro aos fazer os testes criando vários usuários e tentando deletar um usuário que está no meio da pilha, o que não aconteceu. Obrigado pelas colaborações.
+Dillon Patrick
+28/08/21 às 16:47 | Editado em 12/09/2021
+
+Criei mais uma condição para o "delete": Se o saldo da conta for positivo, não autorizar a exclusão. Se tiver algo errado eu aceito sugestões
+
+app.delete("/account", verifyIfExistingCPF, (request, response) => {
+  const { customer } = request;
+  const { cpf } = request.headers;
+
+  const balance = getBalance(customer.statement);
+
+  const customerIndex = customers.findIndex((customer) => customer.cpf === cpf);
+
+  if (customerIndex < 0) {
+    return response.status.json({ error: "Customer Not found" });
+  }
+  if (balance > 0) {
+    return response
+      .status(401)
+      .json({
+        error:
+          "It is not possible to delete an account with a positive balance",
+      });
+  }
+
+  customers.splice(customerIndex, 1);
+  return response.status(200).send();
+});
+
+Luis Henrique De Jesus Lima
+19/01/22 às 13:24
+
+Eu percebi o erro e vim procura nos comentários e o seu me ajudou, bom d+.
+Gabriel Costa
+04/11/21 às 22:48
+
+Na realidade o erro ocorre pois utiliza-se o customer checado no middleware pelo cpf enviado na header na hora do delete .
+No middleware é utilizado o método find, que retorna o primeiro resultado que encontra quando a condição é satisfeita. Porém, não sei como conseguiram criar mais de um usuário com o mesmo cpf, visto que no metodo de criação de usuários existe uma verificação(a função customerAlreadyExists) exatamente para não permitir isso.
+De qualquer forma o mais correto seria enviar o cpf na requisiçao(por query params, por ex) encontrar o index dele no array(com o indexOf como mencionaram) e daí usar o splice para esse índice.
+Daniel Ribeiro Skroski
+25/12/21 às 08:14
+
+Sim Galera, percebi o mesmo problema, e me ajudaram! Obrigado!
+
+
+
+
+
+
+
+
+
+
+
+08/12/21 às 23:13
+Problema testes desafio 1
+Aula em: Primeiro projeto com Node.js › Primeiro projeto com Node.js › Remover conta
+
+Boa Noite,
+
+Acabei de fazer o desafio 1 e os testes não estão passando apesar da aplicação estar funcionando 100%. Alguém pode me dar uma luz ?
+
+erro1.png
+
+erro2.png
+
+erro3.png
+
+erro4.png
+
+Segue o link do meu repositório com o código atualizado:
+https://github.com/colacobruno/node-desafio1
+Melhor Resposta
+Dalton Menezes
+09/12/21 às 08:48
+
+Falaaaa @Bruno Colaço Moreira, tudo bem? 😄
+
+Na rota app.post('/users', é esperado que se retorne o usuário que foi cadastrado, por isso o ideal é separar o user em um objeto antes de fazer o push, para que, assim, possa reaproveitar esse objeto e mandar na resposta. No caso, ficaria assim:
+
+const user = {
+  name,
+  username,
+  id: uuidv4(),
+  todos: []
+}
+
+users.push(user);
+
+return response.status(201).json(user);
+
+Já na rota app.post('/todos', precisamos fazer o mesmo com o todo:
+
+const todo = {
+  id: uuidv4(),
+  title,
+  done: false,
+  deadline: new Date(deadline),
+  created_at: new Date()
+}
+
+user.todos.push(todo)
+
+return response.status(201).json(todo);
+
+Por fim, na rota de app.delete('/todos/:id', troque de findIndex para find, assim, no splice, ele removerá baseado na referência desse objeto. Ficaria assim:
+
+const todo = user.todos.find((todo) => todo.id === id)
+
+if (!todo) {
+  return response.status(404).json({
+    error: "Tarefa não encontrada"
+  });
+}
+
+user.todos.splice(todo);
+
+return response.status(204).json();
+
+Essas alterações deverão resolver o problema.
+Tente ai e me diga se deu certinho, por favor. 💜🚀
+Bruno Colaço Moreira
+09/12/21 às 09:23
+
+Obrigado.
+Agora os testes funcionaram, srrsrs
+
+A propósito, como vc escreveu os códigos aqui ? eu li um tutorial de vocês que era pra usar crase 3x e eu fiz isso mas não ficou assim.
+
+Vejo o povo colocando e ficando colorido assim e tal e não achei essa opção.
+Rocketseat
+Dalton Menezes
+09/12/21 às 09:29
+
+@Bruno Colaço Moreira de nada, fico muito feliz em ajudar. Sobre a formatação de código, usamos a sintaxe de markdown:
+codehighlight.gif
+
+Bons estudos 💜🚀
+Bruno Colaço Moreira
+10/12/21 às 19:18
+
+@Dalton Menezes ah...tinha esquecido do js , rsrsrsrsrs
+Todas as respostas
+
+Página 1 de página 1
+Bento Menni Domingos Pedro
+05/04/22 às 21:34 | Editado em 05/04/2022
+
+@Dalton Menezes,
+
+Eu estou tendo este erro durante o test pelo jest mas no insomnia está tudo funcionando. Fiz alteração apenas ao post /todos conforme indicaste mas não passa. Outros passaram de primeira.
+
+image.png
+
+image.png
+Bento Menni Domingos Pedro
+05/04/22 às 22:00
+
+resolvido cara
+Dalton Menezes
+09/12/21 às 08:48
+
+Falaaaa @Bruno Colaço Moreira, tudo bem? 😄
+
+Na rota app.post('/users', é esperado que se retorne o usuário que foi cadastrado, por isso o ideal é separar o user em um objeto antes de fazer o push, para que, assim, possa reaproveitar esse objeto e mandar na resposta. No caso, ficaria assim:
+
+const user = {
+  name,
+  username,
+  id: uuidv4(),
+  todos: []
+}
+
+users.push(user);
+
+return response.status(201).json(user);
+
+Já na rota app.post('/todos', precisamos fazer o mesmo com o todo:
+
+const todo = {
+  id: uuidv4(),
+  title,
+  done: false,
+  deadline: new Date(deadline),
+  created_at: new Date()
+}
+
+user.todos.push(todo)
+
+return response.status(201).json(todo);
+
+Por fim, na rota de app.delete('/todos/:id', troque de findIndex para find, assim, no splice, ele removerá baseado na referência desse objeto. Ficaria assim:
+
+const todo = user.todos.find((todo) => todo.id === id)
+
+if (!todo) {
+  return response.status(404).json({
+    error: "Tarefa não encontrada"
+  });
+}
+
+user.todos.splice(todo);
+
+return response.status(204).json();
+
+Essas alterações deverão resolver o problema.
+Tente ai e me diga se deu certinho, por favor. 💜🚀
+Bruno Colaço Moreira
+09/12/21 às 09:23
+
+Obrigado.
+Agora os testes funcionaram, srrsrs
+
+A propósito, como vc escreveu os códigos aqui ? eu li um tutorial de vocês que era pra usar crase 3x e eu fiz isso mas não ficou assim.
+
+Vejo o povo colocando e ficando colorido assim e tal e não achei essa opção.
+Rocketseat
+Dalton Menezes
+09/12/21 às 09:29
+
+@Bruno Colaço Moreira de nada, fico muito feliz em ajudar. Sobre a formatação de código, usamos a sintaxe de markdown:
+codehighlight.gif
+
+Bons estudos 💜🚀
+Bruno Colaço Moreira
+10/12/21 às 19:18
+
+@Dalton Menezes ah...tinha esquecido do js , rsrsrsrsrs
+
+
+
+
+
+
+
+
+
+
+
+
+
+20/11/21 às 18:53 | Editado em 18/01/2022
+Splice
+Aula em: Primeiro projeto com Node.js › Primeiro projeto com Node.js › Remover conta
+
+Na documentação do splice diz ele espera um índice por onde começar a remover itens, a quantidade de itens a ser removida e o resto dos argumentos são itens a serem inclusos na array. O que eu não entendi é como passar um objeto como primeiro argumento diz para o splice que ele tem que remover aquele objeto em específico. Por de baixo dos panos o JavaScript roda um findIndex ou coisa parecida?
+Melhor Resposta
+Ricardo Passos
+22/11/21 às 19:39 | Editado em 01/12/2021
+
+Opa, Elias.
+
+Acredito que não seja isso não. Como eu fiquei com uma pulga atrás da orelha, fiz alguns testes. Ao que parece, quando passamos um objeto como primeiro argumento para o splice, ele (o splice) acaba removendo SEMPRE o primeiro item do array. Fiz um pequeno script para testar:
+
+<body>
+    <div>
+      <label for="name">Nome</label>
+      <input id="name" type="text" />
+
+      <label for="email">Email</label>
+      <input id="email" type="text" />
+
+      <button>Cadastrar</button>
+      <button>Remover usuário</button>
+    </div>
+
+    <div>
+      <h2>Usuários</h2>
+      <pre></pre>
+    </div>
+
+    <script>
+      // botões
+      const addUser = document.getElementsByTagName('button')[0]
+      const removeUser = document.getElementsByTagName('button')[1]
+
+      // inputs
+      const nameInput = document.querySelector('#name')
+      const emailInput = document.querySelector('#email')
+      const preElem = document.querySelector('pre')
+
+      const customers = []
+
+      function addCustomer() {
+        const name = nameInput.value
+        const email = emailInput.value
+
+        const user = {
+          name,
+          email,
+        }
+
+        customers.push(user)
+        console.log(customers)
+        preElem.innerText = JSON.stringify(customers, null, 2)
+      }
+
+      // segundo objeto dentro array
+      // a ideia é passar esse objeto para o splice e ver se o splice irá remover
+      // o segundo objeto
+      const secondUserRef = customers[1]
+
+      function removeCustomer() {
+        console.log('before splice', customers)
+        customers.splice(secondUserRef, 1)
+        console.log('after splice', customers)
+        
+        preElem.innerText = JSON.stringify(customers, null, 2)
+      }
+
+      addUser.addEventListener('click', addCustomer)
+      removeUser.addEventListener('click', removeCustomer)
+    </script>
+  </body>
+
+Por favor, me corrija se eu estiver equivocado. Se quiser, pode fechar esse tópico, é mais só uma curiosidade mesmo.
+Todas as respostas
+
+Página 1 de página 1
+André Henrique Freitas do Amaral
+01/12/21 às 15:38 | Editado em 18/01/2022
+
+@Ricardo Passos,
+
+Também fiquei muito confuso com esse uso do splice na rota da API.
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
+
+O primeiro argumento de splice é o start, um argumento tipo number. Qualquer objeto que seja passado para start será considerado como 0, assim como boolean, undefined e null.
+
+Atençao especial para os números negativos: Se o parametro start for chamado com o valor -n, onde n é um número, o splice converterá para array.length - n. Ou seja, -1 indica o último elemento, -2 o penúltimo, etc.
+
+Se o splice estivesse sendo usado assim em TypeScript nao seria possível compilar o código.
+
+Att.,
+Ricardo Passos
+02/12/21 às 09:03
+
+Agradeço pelo complemento na resposta André
+Ricardo Passos
+22/11/21 às 19:39 | Editado em 01/12/2021
+
+Opa, Elias.
+
+Acredito que não seja isso não. Como eu fiquei com uma pulga atrás da orelha, fiz alguns testes. Ao que parece, quando passamos um objeto como primeiro argumento para o splice, ele (o splice) acaba removendo SEMPRE o primeiro item do array. Fiz um pequeno script para testar:
+
+<body>
+    <div>
+      <label for="name">Nome</label>
+      <input id="name" type="text" />
+
+      <label for="email">Email</label>
+      <input id="email" type="text" />
+
+      <button>Cadastrar</button>
+      <button>Remover usuário</button>
+    </div>
+
+    <div>
+      <h2>Usuários</h2>
+      <pre></pre>
+    </div>
+
+    <script>
+      // botões
+      const addUser = document.getElementsByTagName('button')[0]
+      const removeUser = document.getElementsByTagName('button')[1]
+
+      // inputs
+      const nameInput = document.querySelector('#name')
+      const emailInput = document.querySelector('#email')
+      const preElem = document.querySelector('pre')
+
+      const customers = []
+
+      function addCustomer() {
+        const name = nameInput.value
+        const email = emailInput.value
+
+        const user = {
+          name,
+          email,
+        }
+
+        customers.push(user)
+        console.log(customers)
+        preElem.innerText = JSON.stringify(customers, null, 2)
+      }
+
+      // segundo objeto dentro array
+      // a ideia é passar esse objeto para o splice e ver se o splice irá remover
+      // o segundo objeto
+      const secondUserRef = customers[1]
+
+      function removeCustomer() {
+        console.log('before splice', customers)
+        customers.splice(secondUserRef, 1)
+        console.log('after splice', customers)
+        
+        preElem.innerText = JSON.stringify(customers, null, 2)
+      }
+
+      addUser.addEventListener('click', addCustomer)
+      removeUser.addEventListener('click', removeCustomer)
+    </script>
+  </body>
+
+Por favor, me corrija se eu estiver equivocado. Se quiser, pode fechar esse tópico, é mais só uma curiosidade mesmo.
+Elias Gabriel
+22/11/21 às 09:25 | Editado em 01/12/2021
+
+Opa @Ricardo Passos, tudo bem?
+
+Esse customer que está sendo passado para o splice, aponta diretamente para o endereço de memória da posição do array. Como assim?
+
+O customer foi criado no middleware verifyIfExistisAccountCPF, por meio da função customers.find. Esse método find retorna diretamente o endereço de memória dessa posição.
+
+Quando passa esse "endereço" para o splice, ele sabe exatamente a partir de onde remover. Então não, não é feito um findIndex por baixo dos panos, pois o JavaScript não sabe com que condição se basear na comparação.
+
+Espero ter ajudado, abraços 💜
+André Henrique Freitas do Amaral
+01/12/21 às 15:33
+
+Oi @Elias Gabriel,
+
+Creio que há um equívoco. O método splice nao sabe a partir do "endereço" qual elemento do array precisa ser removido. Assim como @Ricardo Passos quis demonstrar.
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
+
+O primeiro argumento de splice é o start, um argumento tipo number. Qualquer objeto que seja passado para start será considerado como 0, assim como boolean, undefined e null.
+
+Se o código estivesse sendo escrito em TypeScript nao seria possível compilar.
+
+Att.,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+10/12/21 às 20:46 | Editado em 11/12/2021
+Por que no delete e em outros verbos está pegando o customer pelo request e não pelo header?
+Aula em: Primeiro projeto com Node.js › Primeiro projeto com Node.js › Remover conta
+
+No caso, como o insomia sabe que o customer vem do head?
+
+app.post("/account", (request, response) => {
+
+    const { cpf, name } = request.body;
+    const customersAlreadyExists = customers.some(customer => customer.cpf === cpf);
+
+    if (customersAlreadyExists) {
+        return response.status(400).json({ error: "Customer already exists" });
+    }
+
+
+    customers.push({
+        cpf,
+        name,
+        id: uuidv4(),
+        statement: []
+    });
+
+    return response.status(201).send();
+})
+
+app.put("/account", verifyIfExistsAccountCPF, (request, response) => {
+    const { name } = request.body;
+    const { customer } = request;
+    customer.name = name;
+
+    return response.status(201).send();
+})
+
+app.delete("/account", verifyIfExistsAccountCPF, (request, response) => {
+    const { customer } = request;
+
+    customers.splice(customer, 1);
+
+    return response.status(200).send(customers);
+
+})
+
+app.get("/account", verifyIfExistsAccountCPF, (request, response) => {
+    const { customer } = request;
+    return response.json(customer);
+})
+
+app.get("/statement", verifyIfExistsAccountCPF, (request, response) => {
+
+    const { customer } = request;
+    return response.json(customer.statement);
+
+})
+
+
+app.post("/deposit", verifyIfExistsAccountCPF, (request, response) => {
+
+    const { description, amount } = request.body;
+    const { customer } = request;
+    const statementOperation = {
+        description,
+        amount,
+        created_at: new Date(),
+        type: "credit"
+
+    }
+
+    customer.statement.push(statementOperation);
+    return response.status(201).send();
+
+})
+
+app.post('/withdraw', verifyIfExistsAccountCPF, (request, response) => {
+
+    const { amount } = request.body;
+    const { customer } = request;
+
+    const balance = getBalance(customer.statement);
+
+    if (balance < amount) {
+        return response.status(400).json({ error: "Insuficient funds" })
+    }
+
+    const statementOperation = {
+        amount,
+        created_at: new Date(),
+        type: "debit"
+
+    }
+
+    customer.statement.push(statementOperation);
+    return response.status(201).send();
+
+});
+
+Melhor Resposta
+Elias Gabriel
+11/12/21 às 12:18
+
+Opa @Gustavo Goulart, tudo bem?
+
+Na verdade o Insomnia não tem conhecimento sobre essa configuração da API, são coisas diferentes.
+
+Mas respondendo a pergunta do título do tópico, é possível receber o costumer por dentro da request pois no middleware verifyIfExistsAccountCPF adicionamos essa propriedade caso passe na validação.
+
+Por isso é possível recuperar essa propriedade em rotas que utilizam essa middleware.
+
+No mais, espero ter ajudado de alguma forma! Qualquer coisa é só falar.
+
+Abraços 💜
+Todas as respostas
+
+Página 1 de página 1
+Gustavo Goulart
+11/12/21 às 19:37
+
+Entendi, obrigado!!
+Elias Gabriel
+11/12/21 às 12:18
+
+Opa @Gustavo Goulart, tudo bem?
+
+Na verdade o Insomnia não tem conhecimento sobre essa configuração da API, são coisas diferentes.
+
+Mas respondendo a pergunta do título do tópico, é possível receber o costumer por dentro da request pois no middleware verifyIfExistsAccountCPF adicionamos essa propriedade caso passe na validação.
+
+Por isso é possível recuperar essa propriedade em rotas que utilizam essa middleware.
+
+No mais, espero ter ajudado de alguma forma! Qualquer coisa é só falar.
+
+Abraços 💜
+
+
+
+
+
+
+
+
+
+
+
